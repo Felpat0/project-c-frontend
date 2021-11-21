@@ -1,6 +1,6 @@
 import { Redirect } from "react-router";
 
-const NotFound = () => {
+const NotFound: React.FC = () => {
   console.log("Not found");
   return <Redirect to={"/"} />;
 };

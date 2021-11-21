@@ -12,7 +12,6 @@ import { PrivateRoute } from "../components/PrivateRoute";
 import { RedirectToUserBoard } from "./RedirectToUserBoard";
 import { observer } from "mobx-react";
 import { Login } from "./Login";
-import NotFound from "./NotFound";
 import { Signup } from "./Signup";
 import { OAuthCallback } from "./OAuthCallback";
 import { AppLayout } from "./AppLayout";
@@ -46,12 +45,12 @@ const Root: React.FC = observer((props) => {
             <Route path={"/signup"} component={Signup} />
             <Route path={"/auth/fail"} component={Login} />
             <Route path={"/auth/callback"} component={OAuthCallback} />
+            <Route path={"/app"} component={AppLayout} />
             <PrivateRoute
               isAuthenticated={stores.session.isLogged}
               path={"/user/:uid"}
               component={AppLayout}
             />
-            <Route path={"*"} component={NotFound} />
           </Switch>
         </Router>
       </ChakraProvider>

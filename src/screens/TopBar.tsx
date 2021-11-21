@@ -26,7 +26,11 @@ export const TopBar: React.FC = observer(() => {
       <Spacer />
       <Menu>
         <MenuButton>
-          <Avatar src={session.user?.profilePhoto} size={"lg"} />
+          <Avatar
+            src={session.user?.profilePhoto}
+            name={session.user?.nominative}
+            size={"lg"}
+          />
         </MenuButton>
         <MenuList>
           <MenuItem

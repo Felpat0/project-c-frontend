@@ -21,6 +21,44 @@ export const isPasswordEnoughComplex = (
   return true;
 };
 
+const replaceStringCharacterByIndex = (
+  data: string,
+  index: number,
+  replaceMent: string
+): string => {
+  if (index >= data.length) return data;
+  return data.substring(0, index) + replaceMent + data.substring(index + 1);
+};
+
+export const dateToString = (
+  date: Date,
+  language?: "it-IT" | "en-US",
+  options?: any
+): string => {
+  let toReturn = "";
+  toReturn = date.toLocaleString(
+    language ? language : "it-IT",
+    options
+      ? options
+      : {
+          weekday: "long",
+          month: "2-digit",
+          day: "2-digit",
+          year: "2-digit",
+        }
+  );
+  toReturn = replaceStringCharacterByIndex(
+    toReturn,
+    0,
+    toReturn[0].toUpperCase()
+  );
+  return toReturn;
+};
+
+export const getDaysInMonth = (month: number, year: number) => {
+  return new Date(year, month, 0).getDate();
+};
+
 export const openOAuthWindow = (provider: Provider) => {
   window.open(
     process.env.REACT_APP_API_BASE_URL + "auth/" + provider + "/",
