@@ -1,5 +1,5 @@
 import { toUser } from "./utils";
-import { User } from "./../types";
+import { CalendarType, Task, User } from "./../types";
 
 let sessionToken: string | undefined;
 
@@ -57,6 +57,7 @@ const makeApiRequest = async (
   }
 };
 
+//------------------------------------------------------------ USER ------------------------------------------------------------
 const login = async (email: string, password: string) => {
   // Delete old token
   localStorage.removeItem("session");
@@ -199,6 +200,95 @@ const uploadAndSetUserAvatar = async (formData: FormData, userId: number) => {
   return await setUserAvatar((await response.json()).imageUrl, userId);
 };
 
+//------------------------------------------------------------ CALENDAR ------------------------------------------------------------
+const getCalendarUsers = async (
+  userId: string,
+  calendarId: number
+): Promise<User[]> => {
+  //return
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve([
+        {
+          id: "ao",
+          email: "b994@live.com",
+          nominative: "Federico Cattini",
+          profilePhoto:
+            "https://cdn.images.express.co.uk/img/dynamic/67/590x/Francesco-Totti-Roma-Real-Madrid-918704.jpg",
+          role: "user",
+        },
+      ]);
+    }, 1000);
+  });
+};
+
+const getCalendar = async (
+  userId: string,
+  calendarId: number
+): Promise<CalendarType> => {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve({
+        id: 1,
+        tasks: [
+          {
+            id: 1,
+            type: "free",
+            startDate: new Date(),
+            endDate: new Date(),
+            user: {
+              id: "ao",
+              email: "b994@live.com",
+              nominative: "Federico Cattini",
+              profilePhoto:
+                "https://cdn.images.express.co.uk/img/dynamic/67/590x/Francesco-Totti-Roma-Real-Madrid-918704.jpg",
+              role: "user",
+            },
+            calendarId: 1,
+            isGlobal: false,
+          },
+        ],
+        users: [
+          {
+            id: "ao",
+            email: "b994@live.com",
+            nominative: "Federico Cattini",
+            profilePhoto:
+              "https://cdn.images.express.co.uk/img/dynamic/67/590x/Francesco-Totti-Roma-Real-Madrid-918704.jpg",
+            role: "user",
+          },
+        ],
+      });
+    }, 1000);
+  });
+};
+
+//------------------------------------------------------------ TASK ------------------------------------------------------------
+const getGlobalTasks = async (userId: string): Promise<Task[]> => {
+  //return
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve([]);
+    }, 1000);
+  });
+};
+
+const getCalendarTasks = async (userId: string): Promise<Task[]> => {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve([]);
+    }, 1000);
+  });
+};
+
+const addTask = async (userId: string, task: Task): Promise<Task> => {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve(task);
+    }, 1000);
+  });
+};
+
 const api = {
   getSessionToken,
   setSession,
@@ -213,6 +303,11 @@ const api = {
   updateUser,
   setUserAvatar,
   uploadAndSetUserAvatar,
+  getCalendar,
+  getCalendarUsers,
+  getGlobalTasks,
+  getCalendarTasks,
+  addTask,
 };
 
 export default api;

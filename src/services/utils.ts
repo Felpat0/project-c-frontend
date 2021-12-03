@@ -1,4 +1,10 @@
-import { Provider, User } from "../types";
+import {
+  CalendarDayState,
+  CalendarType,
+  DayState,
+  Provider,
+  User,
+} from "../types";
 
 export const toUser = (data: any): User => {
   return {
@@ -55,6 +61,22 @@ export const dateToString = (
   return toReturn;
 };
 
+export const isDateBetweenTwoDates = (
+  from: Date,
+  to: Date,
+  date: Date
+): boolean => {
+  let fromDate = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+  let toDate = new Date(to.getFullYear(), to.getMonth(), to.getDate());
+  let dateDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  if (toDate >= dateDate && fromDate <= dateDate) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export const getDaysInMonth = (month: number, year: number) => {
   return new Date(year, month, 0).getDate();
 };
@@ -75,4 +97,34 @@ export const deleteAllCookies = () => {
     let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
   }
+};
+
+//------------------------------ CALENDAR ------------------------------
+export const getCalendarDayState = (
+  calendar: CalendarType,
+  day: Date
+): CalendarDayState => {
+  let state: CalendarDayState = {
+    state: "none",
+    freeUsers: [],
+    busyUsers: [],
+  };
+
+  calendar.tasks.map((task) => {
+    if (isDateBetweenTwoDates(task.startDate, task.endDate, day)) {
+      if (task.type === "free") {
+        state.freeUsers.push(task.user);
+      } else if (task.type === "busy") {
+        state.busyUsers.push(task.user);
+      }
+    }
+  });
+
+  if (state.freeUsers.length >= calendar.users.length) {
+    state.state = "available";
+  } else if (state.busyUsers.length > 0) {
+    state.state = "busy";
+  }
+
+  return state;
 };

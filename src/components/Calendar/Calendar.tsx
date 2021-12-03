@@ -1,16 +1,19 @@
 import { HStack, Stack } from "@chakra-ui/react";
-import { getDaysInMonth } from "../../services/utils";
+import { getCalendarDayState, getDaysInMonth } from "../../services/utils";
+import { CalendarType, User } from "../../types";
 import { CalendarDay } from "./CalendarDay";
 
 export type CalendarProps = {
   month: number;
   year: number;
+  calendar: CalendarType;
   //tasks: Task[];
 };
 
 export const Calendar: React.FC<CalendarProps> = ({
   month,
   year,
+  calendar,
 }: CalendarProps) => {
   let calendarDays: any[] = [];
   let i = 0;
@@ -31,9 +34,17 @@ export const Calendar: React.FC<CalendarProps> = ({
   for (let j = 1; j < getDaysInMonth(month, year) + 1; j++) {
     if (calendarDays[i] && calendarDays[i].length === 7) i++;
     if (!calendarDays[i]) calendarDays[i] = [];
-    if (new Date(year, month, j).getDay()) {
-    }
-    calendarDays[i].push(<CalendarDay date={new Date(year, month, j)} />);
+
+    const state = getCalendarDayState(calendar, new Date(year, month, j));
+
+    calendarDays[i].push(
+      <CalendarDay
+        date={new Date(year, month, j)}
+        key={i.toString() + j.toString()}
+        availableUsers={state.freeUsers}
+        state={state.state}
+      />
+    );
   }
 
   //Add next month days

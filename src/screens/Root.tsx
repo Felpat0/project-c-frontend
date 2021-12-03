@@ -15,12 +15,14 @@ import { Login } from "./Login";
 import { Signup } from "./Signup";
 import { OAuthCallback } from "./OAuthCallback";
 import { AppLayout } from "./AppLayout";
+import { CalendarStore } from "../stores/CalendarStore";
 
 const Root: React.FC = observer((props) => {
   const [stores] = useState<Stores>(() => {
     const root: Stores = {} as Stores;
 
     root.session = new SessionStore(root);
+    root.calendar = new CalendarStore(root);
 
     return root;
   });
