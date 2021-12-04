@@ -1,6 +1,6 @@
 import { HStack, Stack } from "@chakra-ui/react";
 import { getCalendarDayState, getDaysInMonth } from "../../services/utils";
-import { CalendarType, User } from "../../types";
+import { CalendarType } from "../../types";
 import { CalendarDay } from "./CalendarDay";
 
 export type CalendarProps = {

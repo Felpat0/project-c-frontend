@@ -247,6 +247,22 @@ const getCalendar = async (
             calendarId: 1,
             isGlobal: false,
           },
+          {
+            id: 2,
+            type: "busy",
+            startDate: new Date(),
+            endDate: new Date(),
+            user: {
+              id: "ao",
+              email: "b994@live.com",
+              nominative: "Federico Cattini",
+              profilePhoto:
+                "https://cdn.images.express.co.uk/img/dynamic/67/590x/Francesco-Totti-Roma-Real-Madrid-918704.jpg",
+              role: "user",
+            },
+            calendarId: 1,
+            isGlobal: false,
+          },
         ],
         users: [
           {

@@ -39,7 +39,7 @@ export class SessionStore {
   login = async (email: string, password: string) => {
     this.isSubmitting = true;
     try {
-      const user = await api.login(email, password);
+      await api.login(email, password);
       this.sessionToken = api.getSessionToken();
       this.persistSession();
       this.user = await api.getCurrentUser();

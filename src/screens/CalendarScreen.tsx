@@ -11,7 +11,7 @@ interface RouteParams {
 }
 
 export const CalendarScreen: React.FC = observer(() => {
-  const { session, calendar } = useStores();
+  const { calendar } = useStores();
 
   const [currentCalendar, setCurrentCalendar] = useState<
     CalendarType | undefined
@@ -22,9 +22,6 @@ export const CalendarScreen: React.FC = observer(() => {
   useEffect(() => {
     const init = async () => {
       setCurrentCalendar(await calendar.getCalendar(+calendarId));
-
-      if (!currentCalendar) {
-      }
     };
     init();
   }, [calendar, calendarId]);

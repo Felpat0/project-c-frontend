@@ -25,7 +25,7 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
   let borderColor = "#dfe3e6";
   let textColor = "#3f4f75";
   let backgroundColor = transparentize(
-    0.8,
+    isOfAnotherMonth ? 0.2 : 0.8,
     state === "available" ? "#51C47B" : state === "busy" ? "#C45151" : "#dfe3e6"
   );
 
@@ -41,6 +41,7 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
       maxH={maxSize}
       bg={backgroundColor}
       direction={"column"}
+      cursor={isOfAnotherMonth ? "not-allowed" : "pointer"}
     >
       {!isOfAnotherMonth && (
         <>

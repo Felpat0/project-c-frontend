@@ -1,10 +1,4 @@
-import {
-  CalendarDayState,
-  CalendarType,
-  DayState,
-  Provider,
-  User,
-} from "../types";
+import { CalendarDayState, CalendarType, Provider, User } from "../types";
 
 export const toUser = (data: any): User => {
   return {
@@ -118,6 +112,7 @@ export const getCalendarDayState = (
         state.busyUsers.push(task.user);
       }
     }
+    return [];
   });
 
   if (state.freeUsers.length >= calendar.users.length) {

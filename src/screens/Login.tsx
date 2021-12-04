@@ -132,11 +132,7 @@ export const Login: React.FC = observer(() => {
           passwordResetCode: string,
           newPassword: string
         ) => {
-          const response = await session.updatePassword(
-            email,
-            passwordResetCode,
-            newPassword
-          );
+          await session.updatePassword(email, passwordResetCode, newPassword);
         }}
       />
     </Stack>
