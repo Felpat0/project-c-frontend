@@ -1,13 +1,13 @@
-import { HStack, Stack } from "@chakra-ui/react";
-import { getCalendarDayState, getDaysInMonth } from "../../services/utils";
+import { Flex, HStack, Stack } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
+import { getCalendarDays } from "../../services/calendarUtils";
+import { getDatesBetweenTwoDates } from "../../services/utils";
 import { CalendarType } from "../../types";
-import { CalendarDay } from "./CalendarDay";
 
 export type CalendarProps = {
   month: number;
   year: number;
   calendar: CalendarType;
-  //tasks: Task[];
 };
 
 export const Calendar: React.FC<CalendarProps> = ({
@@ -15,55 +15,68 @@ export const Calendar: React.FC<CalendarProps> = ({
   year,
   calendar,
 }: CalendarProps) => {
-  let calendarDays: any[] = [];
-  let i = 0;
-  calendarDays[0] = [];
+  const [calendarDays, setCalendarDays] = useState<any[]>([]);
+  const [selectedCalendarDays, setSelectedCalendarDays] = useState<Date[]>([]);
+  const [isSelecting, setIsSelecting] = useState(false);
 
-  //Add previous month days
-  for (let index = new Date(year, month, 1).getDay() - 1; index > 0; index--) {
-    calendarDays[0].push(
-      <CalendarDay
-        date={new Date(year, month - 1, 1 - index)}
-        isOfAnotherMonth={true}
-        key={index}
-      />
+  const handleSelectAndDeselect = useCallback(
+    (date: Date, eventType?: "down" | "enter") => {
+      //First day selection
+      if (eventType && eventType === "down") {
+        setSelectedCalendarDays([date]);
+      } else {
+        if (isSelecting) {
+          setSelectedCalendarDays([
+            selectedCalendarDays[0],
+            ...getDatesBetweenTwoDates(selectedCalendarDays[0], date),
+          ]);
+        }
+      }
+    },
+    [selectedCalendarDays, isSelecting]
+  );
+
+  useEffect(() => {
+    setCalendarDays(
+      getCalendarDays(
+        calendar,
+        year,
+        month,
+        selectedCalendarDays,
+        handleSelectAndDeselect
+      )
     );
-  }
-
-  //Add current month days
-  for (let j = 1; j < getDaysInMonth(month, year) + 1; j++) {
-    if (calendarDays[i] && calendarDays[i].length === 7) i++;
-    if (!calendarDays[i]) calendarDays[i] = [];
-
-    const state = getCalendarDayState(calendar, new Date(year, month, j));
-
-    calendarDays[i].push(
-      <CalendarDay
-        date={new Date(year, month, j)}
-        key={i.toString() + j.toString()}
-        availableUsers={state.freeUsers}
-        state={state.state}
-      />
-    );
-  }
-
-  //Add next month days
-  const currentWeekDay = calendarDays[i].length;
-  for (let index = currentWeekDay; index !== 7; index++) {
-    calendarDays[i].push(
-      <CalendarDay
-        date={new Date(year, month + 1, index - currentWeekDay + 1)}
-        isOfAnotherMonth={true}
-        key={index}
-      />
-    );
-  }
+  }, [calendar, month, year, selectedCalendarDays, handleSelectAndDeselect]);
 
   return (
-    <Stack>
+    <Stack
+      spacing={"0.7rem"}
+      onMouseUp={() => setIsSelecting(false)}
+      onDragStart={(e) => {
+        e.preventDefault();
+      }}
+    >
       {calendarDays.map((week: any, index) => (
-        <HStack key={index}>{week}</HStack>
+        <HStack
+          spacing={"0.7rem"}
+          key={index}
+          onMouseDown={() => setIsSelecting(true)}
+        >
+          {week}
+        </HStack>
       ))}
+      {/* This flex is used for resetting the selection, it is positioned between the CalendarDays and their container */}
+      <Flex
+        position={"absolute"}
+        top={0}
+        left={0}
+        w={"100%"}
+        h={"100%"}
+        zIndex={0}
+        onClick={(e) => {
+          setSelectedCalendarDays([]);
+        }}
+      ></Flex>
     </Stack>
   );
 };

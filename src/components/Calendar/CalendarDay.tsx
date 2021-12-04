@@ -2,6 +2,7 @@ import { Avatar, AvatarGroup, Flex, Spacer, Text } from "@chakra-ui/react";
 import { dateToString } from "../../services/utils";
 import { transparentize } from "polished";
 import { User } from "../../types";
+import { MouseEventHandler } from "react";
 
 export type CalendarDayProps = {
   date: Date;
@@ -9,6 +10,9 @@ export type CalendarDayProps = {
   state?: "available" | "busy" | "none";
   currentUserState?: "available" | "busy" | "none";
   availableUsers?: User[];
+  isSelected?: boolean;
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseDown?: MouseEventHandler<HTMLDivElement>;
   //tasks: Task[];
 };
 
@@ -18,11 +22,14 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
   state,
   currentUserState,
   availableUsers,
+  isSelected,
+  onMouseEnter,
+  onMouseDown,
 }: CalendarDayProps) => {
   let size = "10vw";
   let minSize = "5rem";
   let maxSize = "8rem";
-  let borderColor = "#dfe3e6";
+  let borderColor = isSelected ? "#007bff" : "#dfe3e6";
   let textColor = "#3f4f75";
   let backgroundColor = transparentize(
     isOfAnotherMonth ? 0.2 : 0.8,
@@ -31,7 +38,7 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
 
   return (
     <Flex
-      border={"2px solid " + borderColor}
+      outline={(isSelected ? "4px solid " : "2px solid ") + borderColor}
       rounded={20}
       minW={minSize}
       minH={minSize}
@@ -42,6 +49,9 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
       bg={backgroundColor}
       direction={"column"}
       cursor={isOfAnotherMonth ? "not-allowed" : "pointer"}
+      zIndex={1}
+      onMouseEnter={onMouseEnter}
+      onMouseDown={onMouseDown}
     >
       {!isOfAnotherMonth && (
         <>
@@ -52,6 +62,7 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
             textAlign={"right"}
             paddingRight={"0.5rem"}
             w={"100%"}
+            userSelect={"none"}
           >
             {dateToString(date, undefined, { day: "2-digit" })}
           </Text>
@@ -69,6 +80,7 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
                   name={user.nominative}
                   src={user.profilePhoto}
                   key={index}
+                  userSelect={"none"}
                 />
               ))}
           </AvatarGroup>

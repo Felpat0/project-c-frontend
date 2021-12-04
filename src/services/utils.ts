@@ -55,6 +55,27 @@ export const dateToString = (
   return toReturn;
 };
 
+export const areDatesEqual = (date1: Date, date2: Date): boolean => {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  );
+};
+
+export const getDatesBetweenTwoDates = function (start: Date, end: Date) {
+  let toReturn: Date[] = [];
+  if (start > end) {
+    let temp = start;
+    start = end;
+    end = temp;
+  }
+  for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+    toReturn.push(new Date(dt));
+  }
+  return toReturn;
+};
+
 export const isDateBetweenTwoDates = (
   from: Date,
   to: Date,
