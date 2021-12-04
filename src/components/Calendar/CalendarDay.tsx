@@ -51,7 +51,11 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
       cursor={isOfAnotherMonth ? "not-allowed" : "pointer"}
       zIndex={1}
       onMouseEnter={onMouseEnter}
-      onMouseDown={onMouseDown}
+      onMouseDown={(e) => {
+        if (e.button === 0 && onMouseDown) {
+          onMouseDown(e);
+        }
+      }}
     >
       {!isOfAnotherMonth && (
         <>

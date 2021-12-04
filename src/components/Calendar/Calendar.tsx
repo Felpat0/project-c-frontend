@@ -1,4 +1,11 @@
-import { Flex, HStack, Stack } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Menu,
+  MenuItem,
+  MenuList,
+  Stack,
+} from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { getCalendarDays } from "../../services/calendarUtils";
 import { getDatesBetweenTwoDates } from "../../services/utils";
@@ -18,6 +25,8 @@ export const Calendar: React.FC<CalendarProps> = ({
   const [calendarDays, setCalendarDays] = useState<any[]>([]);
   const [selectedCalendarDays, setSelectedCalendarDays] = useState<Date[]>([]);
   const [isSelecting, setIsSelecting] = useState(false);
+  const [contextMenuOrigin, setContextMenuOrigin] = useState<number[]>([0, 0]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSelectAndDeselect = useCallback(
     (date: Date, eventType?: "down" | "enter") => {
@@ -55,12 +64,35 @@ export const Calendar: React.FC<CalendarProps> = ({
       onDragStart={(e) => {
         e.preventDefault();
       }}
+      onMouseDown={(e) => {
+        if (e.button === 0) {
+          console.log("we");
+          setIsSelecting(true);
+          setIsMenuOpen(false);
+        }
+      }}
     >
+      <Menu isOpen={isMenuOpen}>
+        <MenuList
+          position={"absolute"}
+          top={contextMenuOrigin[1]}
+          left={contextMenuOrigin[0]}
+          zIndex={3}
+        >
+          <MenuItem>Download</MenuItem>
+          <MenuItem onClick={() => {}}>Create a Copy</MenuItem>
+        </MenuList>
+      </Menu>
       {calendarDays.map((week: any, index) => (
         <HStack
           spacing={"0.7rem"}
           key={index}
           onMouseDown={() => setIsSelecting(true)}
+          onContextMenu={(e) => {
+            e.preventDefault();
+            setContextMenuOrigin([e.clientX, e.clientY]);
+            setIsMenuOpen(true);
+          }}
         >
           {week}
         </HStack>
@@ -73,10 +105,11 @@ export const Calendar: React.FC<CalendarProps> = ({
         w={"100%"}
         h={"100%"}
         zIndex={0}
-        onClick={(e) => {
+        onClick={() => {
           setSelectedCalendarDays([]);
+          setIsMenuOpen(false);
         }}
-      ></Flex>
+      />
     </Stack>
   );
 };
