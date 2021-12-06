@@ -1,10 +1,18 @@
 import {
+  Button,
   Flex,
   HStack,
   Menu,
   MenuGroup,
   MenuItem,
   MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
@@ -12,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { getCalendarDays } from "../../services/calendarUtils";
 import { getDatesBetweenTwoDates } from "../../services/utils";
 import { CalendarType, Task } from "../../types";
+import { TaskForm } from "../Common/TaskForm";
 
 export type CalendarProps = {
   month: number;
@@ -24,6 +33,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   month,
   year,
   calendar,
+  onCreateTask,
 }: CalendarProps) => {
   const { t } = useTranslation();
 
@@ -72,7 +82,6 @@ export const Calendar: React.FC<CalendarProps> = ({
       }}
       onMouseDown={(e) => {
         if (e.button === 0) {
-          console.log("we");
           setIsSelecting(true);
           setIsMenuOpen(false);
         }
@@ -86,7 +95,11 @@ export const Calendar: React.FC<CalendarProps> = ({
           zIndex={3}
         >
           <MenuGroup title={t("screens.calendar.taskMenuGroupTitle")}>
-            <MenuItem onClick={() => {}}>
+            <MenuItem
+              onClick={() => {
+                setIsCreateTaskOpen(true);
+              }}
+            >
               {t("screens.calendar.createTask")}
             </MenuItem>
             <MenuItem onClick={() => {}}>
@@ -122,6 +135,30 @@ export const Calendar: React.FC<CalendarProps> = ({
           setIsMenuOpen(false);
         }}
       />
+      <Modal
+        isOpen={isCreateTaskOpen}
+        onClose={() => setIsCreateTaskOpen(false)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <TaskForm onSubmit={onCreateTask} />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => setIsCreateTaskOpen(false)}
+            >
+              Close
+            </Button>
+            <Button variant="ghost">Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Stack>
   );
 };

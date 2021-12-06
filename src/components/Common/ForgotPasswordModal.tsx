@@ -6,7 +6,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
@@ -149,7 +148,12 @@ export const ForgotPasswordModal: React.FC<Props> = ({
         <ModalCloseButton />
         <ModalBody>
           {currentStep === 0 ? (
-            <form>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSendCode();
+              }}
+            >
               <Text fontSize={"lg"} marginBottom={"1rem"}>
                 {t("screens.login.insertEmail")}
               </Text>
@@ -175,7 +179,12 @@ export const ForgotPasswordModal: React.FC<Props> = ({
               </Flex>
             </form>
           ) : currentStep === 1 ? (
-            <form>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onVerifyCode();
+              }}
+            >
               <Text fontSize={"lg"} marginBottom={"1rem"}>
                 {t("screens.login.insertCode")}
               </Text>
@@ -201,7 +210,12 @@ export const ForgotPasswordModal: React.FC<Props> = ({
               </Flex>
             </form>
           ) : (
-            <form>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSaveNewPassword();
+              }}
+            >
               <Text fontSize={"lg"} marginBottom={"1rem"}>
                 {t("screens.login.insertNewPassword")}
               </Text>
