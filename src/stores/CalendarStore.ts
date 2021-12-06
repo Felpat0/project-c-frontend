@@ -11,6 +11,7 @@ export class CalendarStore {
   isInitialized = false;
   isFetching = false;
   stores: Stores;
+  currentCalendar: CalendarType | undefined;
 
   constructor(stores: Stores) {
     this.stores = stores;
@@ -50,6 +51,7 @@ export class CalendarStore {
       console.log(e);
     } finally {
       this.isFetching = false;
+      this.currentCalendar = toReturn;
       return toReturn;
     }
   };
@@ -81,10 +83,15 @@ export class CalendarStore {
     }
   };
 
-  addTask = async (task: Task): Promise<Task> => {
+  createTask = async (task: Task): Promise<Task | undefined> => {
+    if (!this.stores.session.user) return undefined;
     this.isFetching = true;
     let toReturn: Task = task;
     try {
+      toReturn = await api.createTask(this.stores.session.user.id, task);
+      if (toReturn && this.currentCalendar) {
+        this.currentCalendar.tasks.push(toReturn);
+      }
     } catch (e) {
       console.log(e);
     } finally {

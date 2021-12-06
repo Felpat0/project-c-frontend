@@ -22,7 +22,7 @@ export const TopBar: React.FC = observer(() => {
   }
 
   return (
-    <Flex>
+    <Flex zIndex={2}>
       <Spacer />
       <Menu>
         <MenuButton>

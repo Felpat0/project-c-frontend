@@ -51,23 +51,51 @@ export class SessionStore {
     }
   };
 
-  forgotPassword = async (email: string) => {
-    return await api.forgotPassword(email);
+  forgotPassword = async (email: string): Promise<boolean> => {
+    this.isSubmitting = true;
+    let toReturn = false;
+    try {
+      toReturn = await api.forgotPassword(email);
+    } catch (e) {
+      console.log(e);
+    }
+
+    return toReturn;
   };
 
   verifyPasswordResetCode = async (
     email: string,
     passwordResetCode: string
-  ) => {
-    return await api.verifyPasswordResetCode(email, passwordResetCode);
+  ): Promise<boolean> => {
+    this.isSubmitting = true;
+    let toReturn = false;
+    try {
+      toReturn = await api.verifyPasswordResetCode(email, passwordResetCode);
+    } catch (e) {
+      console.log(e);
+    }
+
+    return toReturn;
   };
 
   updatePassword = async (
     email: string,
     passwordResetCode: string,
     newPassword: string
-  ) => {
-    return await api.updatePassword(email, passwordResetCode, newPassword);
+  ): Promise<boolean> => {
+    this.isSubmitting = true;
+    let toReturn = false;
+    try {
+      toReturn = await api.updatePassword(
+        email,
+        passwordResetCode,
+        newPassword
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
+    return toReturn;
   };
 
   getUserByCookie = async () => {

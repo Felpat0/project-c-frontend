@@ -1,5 +1,6 @@
 import {
   Button,
+  Flex,
   Input,
   Modal,
   ModalBody,
@@ -19,7 +20,7 @@ import { PrimaryButton } from "./styled";
 type Props = {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  sendPasswordResetCode: (email: string) => void;
+  sendPasswordResetCode: (email: string) => Promise<boolean>;
   checkPasswordResetCode: (
     email: string,
     passwordResetCode: string
@@ -28,7 +29,7 @@ type Props = {
     email: string,
     passwordResetCode: string,
     newPassword: string
-  ) => void;
+  ) => Promise<boolean>;
 };
 
 export const ForgotPasswordModal: React.FC<Props> = ({
@@ -47,9 +48,8 @@ export const ForgotPasswordModal: React.FC<Props> = ({
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
 
-  const onSendCode = useCallback(() => {
-    try {
-      sendPasswordResetCode(email);
+  const onSendCode = useCallback(async () => {
+    if (await sendPasswordResetCode(email)) {
       toast({
         title: t("successes.codeSent"),
         status: "success",
@@ -57,8 +57,7 @@ export const ForgotPasswordModal: React.FC<Props> = ({
         isClosable: true,
       });
       setCurrentStep(1);
-    } catch (e) {
-      console.log(e);
+    } else {
       toast({
         title: t("errors.email"),
         status: "error",
@@ -69,8 +68,7 @@ export const ForgotPasswordModal: React.FC<Props> = ({
   }, [email, toast, sendPasswordResetCode, t]);
 
   const onVerifyCode = useCallback(async () => {
-    try {
-      await checkPasswordResetCode(email, code);
+    if (await checkPasswordResetCode(email, code)) {
       toast({
         title: t("successes.codeVerified"),
         status: "success",
@@ -78,8 +76,7 @@ export const ForgotPasswordModal: React.FC<Props> = ({
         isClosable: true,
       });
       setCurrentStep(2);
-    } catch (e) {
-      console.log(e);
+    } else {
       toast({
         title: t("errors.wrongCode"),
         status: "error",
@@ -89,7 +86,7 @@ export const ForgotPasswordModal: React.FC<Props> = ({
     }
   }, [email, code, toast, checkPasswordResetCode, t]);
 
-  const onSaveNewPassword = useCallback(() => {
+  const onSaveNewPassword = useCallback(async () => {
     if (newPassword !== newPasswordConfirm) {
       toast({
         title: t("errors.differentPasswords"),
@@ -109,8 +106,7 @@ export const ForgotPasswordModal: React.FC<Props> = ({
       });
       return;
     }
-    try {
-      updatePassword(email, code, newPassword);
+    if (await updatePassword(email, code, newPassword)) {
       toast({
         title: t("successes.userUpdate"),
         status: "success",
@@ -118,8 +114,7 @@ export const ForgotPasswordModal: React.FC<Props> = ({
         isClosable: true,
       });
       setIsOpen(false);
-    } catch (e) {
-      console.log(e);
+    } else {
       toast({
         title: t("errors.userUpdate"),
         status: "error",
@@ -166,6 +161,18 @@ export const ForgotPasswordModal: React.FC<Props> = ({
                   setEmail(event.target.value);
                 }}
               />
+              <Flex marginTop={"1rem"} justifyContent={"flex-end"}>
+                <Button
+                  variant={"ghost"}
+                  mr={3}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {t("common.close")}
+                </Button>
+                <PrimaryButton onClick={onSendCode}>
+                  {t("screens.login.sendCode")}
+                </PrimaryButton>
+              </Flex>
             </form>
           ) : currentStep === 1 ? (
             <form>
@@ -180,6 +187,18 @@ export const ForgotPasswordModal: React.FC<Props> = ({
                   setCode(event.target.value);
                 }}
               />
+              <Flex marginTop={"1rem"} justifyContent={"flex-end"}>
+                <Button
+                  variant={"ghost"}
+                  mr={3}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {t("common.close")}
+                </Button>
+                <PrimaryButton onClick={onVerifyCode}>
+                  {t("screens.login.verifyCode")}
+                </PrimaryButton>
+              </Flex>
             </form>
           ) : (
             <form>
@@ -206,28 +225,22 @@ export const ForgotPasswordModal: React.FC<Props> = ({
                   setNewPasswordConfirm(event.target.value);
                 }}
               />
+              <Flex marginTop={"1rem"} justifyContent={"flex-end"}>
+                <Button
+                  variant={"ghost"}
+                  mr={3}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {t("common.close")}
+                </Button>
+
+                <PrimaryButton onClick={onSaveNewPassword}>
+                  {t("screens.login.saveNewPassword")}
+                </PrimaryButton>
+              </Flex>
             </form>
           )}
         </ModalBody>
-
-        <ModalFooter>
-          <Button variant={"ghost"} mr={3} onClick={() => setIsOpen(false)}>
-            {t("common.close")}
-          </Button>
-          {currentStep === 0 ? (
-            <PrimaryButton onClick={onSendCode}>
-              {t("screens.login.sendCode")}
-            </PrimaryButton>
-          ) : currentStep === 1 ? (
-            <PrimaryButton onClick={onVerifyCode}>
-              {t("screens.login.verifyCode")}
-            </PrimaryButton>
-          ) : (
-            <PrimaryButton onClick={onSaveNewPassword}>
-              {t("screens.login.saveNewPassword")}
-            </PrimaryButton>
-          )}
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

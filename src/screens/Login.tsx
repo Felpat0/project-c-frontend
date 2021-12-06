@@ -113,27 +113,9 @@ export const Login: React.FC = observer(() => {
       <ForgotPasswordModal
         isOpen={isForgotPasswordModalOpen}
         setIsOpen={setIsForgotPasswordModalOpen}
-        sendPasswordResetCode={async (email: string) =>
-          await session.forgotPassword(email)
-        }
-        checkPasswordResetCode={async (
-          email: string,
-          passwordResetCode: string
-        ) => {
-          const response = await session.verifyPasswordResetCode(
-            email,
-            passwordResetCode
-          );
-          if (response.error) return false;
-          return true;
-        }}
-        updatePassword={async (
-          email: string,
-          passwordResetCode: string,
-          newPassword: string
-        ) => {
-          await session.updatePassword(email, passwordResetCode, newPassword);
-        }}
+        sendPasswordResetCode={session.forgotPassword}
+        checkPasswordResetCode={session.verifyPasswordResetCode}
+        updatePassword={session.updatePassword}
       />
     </Stack>
   );

@@ -73,18 +73,27 @@ const login = async (email: string, password: string) => {
   return toUser(response.user);
 };
 
-const forgotPassword = async (email: string) => {
-  return await makeApiRequest("POST", "auth/forgotPassword", { email });
+const forgotPassword = async (email: string): Promise<boolean> => {
+  const response = await makeApiRequest("POST", "auth/forgotPassword", {
+    email,
+  });
+
+  return !response.error;
 };
 
 const verifyPasswordResetCode = async (
   email: string,
   passwordResetCode: string
-) => {
-  return await makeApiRequest("POST", "auth/verifyPasswordResetCode", {
-    email,
-    passwordResetCode,
-  });
+): Promise<boolean> => {
+  const response = await makeApiRequest(
+    "POST",
+    "auth/verifyPasswordResetCode",
+    {
+      email,
+      passwordResetCode,
+    }
+  );
+  return !response.error;
 };
 
 const updatePassword = async (
@@ -92,11 +101,13 @@ const updatePassword = async (
   passwordResetCode: string,
   newPassword: string
 ) => {
-  return await makeApiRequest("POST", "auth/updatePassword", {
+  const response = await makeApiRequest("POST", "auth/updatePassword", {
     email,
     passwordResetCode,
     newPassword,
   });
+
+  return !response.error;
 };
 
 const logout = async () => {
@@ -297,7 +308,7 @@ const getCalendarTasks = async (userId: string): Promise<Task[]> => {
   });
 };
 
-const addTask = async (userId: string, task: Task): Promise<Task> => {
+const createTask = async (userId: string, task: Task): Promise<Task> => {
   return new Promise(function (resolve) {
     setTimeout(function () {
       resolve(task);
@@ -323,7 +334,7 @@ const api = {
   getCalendarUsers,
   getGlobalTasks,
   getCalendarTasks,
-  addTask,
+  createTask,
 };
 
 export default api;

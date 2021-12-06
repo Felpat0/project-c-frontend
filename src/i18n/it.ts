@@ -66,6 +66,11 @@ const it = {
       twitterSignup: "Registrati con Twitter",
       googleSignup: "Registrati con Google",
     },
+    calendar: {
+      taskMenuGroupTitle: "Attività",
+      createTask: "Crea attività nei giorni selezionati",
+      deleteTask: "Elimina attività",
+    },
   },
 };
 

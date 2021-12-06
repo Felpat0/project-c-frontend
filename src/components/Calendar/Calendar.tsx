@@ -2,19 +2,22 @@ import {
   Flex,
   HStack,
   Menu,
+  MenuGroup,
   MenuItem,
   MenuList,
   Stack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getCalendarDays } from "../../services/calendarUtils";
 import { getDatesBetweenTwoDates } from "../../services/utils";
-import { CalendarType } from "../../types";
+import { CalendarType, Task } from "../../types";
 
 export type CalendarProps = {
   month: number;
   year: number;
   calendar: CalendarType;
+  onCreateTask: (task: Task) => void;
 };
 
 export const Calendar: React.FC<CalendarProps> = ({
@@ -22,11 +25,14 @@ export const Calendar: React.FC<CalendarProps> = ({
   year,
   calendar,
 }: CalendarProps) => {
+  const { t } = useTranslation();
+
   const [calendarDays, setCalendarDays] = useState<any[]>([]);
   const [selectedCalendarDays, setSelectedCalendarDays] = useState<Date[]>([]);
   const [isSelecting, setIsSelecting] = useState(false);
   const [contextMenuOrigin, setContextMenuOrigin] = useState<number[]>([0, 0]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
 
   const handleSelectAndDeselect = useCallback(
     (date: Date, eventType?: "down" | "enter") => {
@@ -79,8 +85,14 @@ export const Calendar: React.FC<CalendarProps> = ({
           left={contextMenuOrigin[0]}
           zIndex={3}
         >
-          <MenuItem>Download</MenuItem>
-          <MenuItem onClick={() => {}}>Create a Copy</MenuItem>
+          <MenuGroup title={t("screens.calendar.taskMenuGroupTitle")}>
+            <MenuItem onClick={() => {}}>
+              {t("screens.calendar.createTask")}
+            </MenuItem>
+            <MenuItem onClick={() => {}}>
+              {t("screens.calendar.deleteTask")}
+            </MenuItem>
+          </MenuGroup>
         </MenuList>
       </Menu>
       {calendarDays.map((week: any, index) => (
