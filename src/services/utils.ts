@@ -1,4 +1,10 @@
-import { CalendarDayState, CalendarType, Provider, User } from "../types";
+import {
+  CalendarDayState,
+  CalendarType,
+  Period,
+  Provider,
+  User,
+} from "../types";
 
 export const toUser = (data: any): User => {
   return {
@@ -63,7 +69,7 @@ export const areDatesEqual = (date1: Date, date2: Date): boolean => {
   );
 };
 
-export const getDatesBetweenTwoDates = function (start: Date, end: Date) {
+export const getDatesBetweenTwoDates = (start: Date, end: Date): Date[] => {
   let toReturn: Date[] = [];
   if (start > end) {
     let temp = start;
@@ -74,6 +80,38 @@ export const getDatesBetweenTwoDates = function (start: Date, end: Date) {
     toReturn.push(new Date(dt));
   }
   return toReturn;
+};
+
+export const getFirstAndLastDate = (dates: Date[]): Period | undefined => {
+  if (dates.length === 0) return undefined;
+  if (dates.length === 1)
+    return {
+      startDate: dates[0],
+      endDate: dates[0],
+    };
+  let toReturn: Period = {
+    startDate: dates[0],
+    endDate: dates[0],
+  };
+
+  dates.map((date) => {
+    if (date < toReturn.startDate) toReturn.startDate = date;
+    if (date > toReturn.endDate) toReturn.endDate = date;
+
+    return date;
+  });
+
+  return toReturn;
+};
+
+export const dateToDatePickerFormat = (date: Date): string => {
+  return (
+    date.getFullYear().toString() +
+    "-" +
+    (date.getMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    date.getDate().toString().padStart(2, "0")
+  );
 };
 
 export const isDateBetweenTwoDates = (

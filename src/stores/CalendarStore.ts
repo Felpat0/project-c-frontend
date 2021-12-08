@@ -83,15 +83,17 @@ export class CalendarStore {
     }
   };
 
-  createTask = async (task: Task): Promise<Task | undefined> => {
+  createTask = async (
+    task: Task,
+    calendarId: number
+  ): Promise<Task | undefined> => {
     if (!this.stores.session.user) return undefined;
     this.isFetching = true;
+    task.user = this.stores.session.user;
+    task.calendarId = calendarId;
     let toReturn: Task = task;
     try {
       toReturn = await api.createTask(this.stores.session.user.id, task);
-      if (toReturn && this.currentCalendar) {
-        this.currentCalendar.tasks.push(toReturn);
-      }
     } catch (e) {
       console.log(e);
     } finally {

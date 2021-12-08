@@ -31,6 +31,9 @@ const it = {
     wrongCode: "Il codice inserito non è corretto",
     differentPasswords: "Le password inserite non coincidono",
     email: "C'è stato un problema con l'invio dell'email",
+    missingTaskType: "Scegliere il tipo attività",
+    missingStartDate: "Scegliere la data iniziale",
+    missingEndDate: "Scegliere la data finale",
   },
   successes: {
     login: "Accesso eseguito con successo",
@@ -70,6 +73,13 @@ const it = {
       taskMenuGroupTitle: "Attività",
       createTask: "Crea attività nei giorni selezionati",
       deleteTask: "Elimina attività",
+      createTaskModalTitle: "Creazione attività",
+      type: "Indica questi giorni come...",
+      startDate: "Data inizio attività",
+      endDate: "Data fine attività",
+      isGlobal: "Questa attività vale per tutti i miei calendari",
+      free: "Liberi",
+      busy: "Occupati",
     },
   },
 };

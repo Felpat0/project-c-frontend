@@ -18,7 +18,10 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getCalendarDays } from "../../services/calendarUtils";
-import { getDatesBetweenTwoDates } from "../../services/utils";
+import {
+  getDatesBetweenTwoDates,
+  getFirstAndLastDate,
+} from "../../services/utils";
 import { CalendarType, Task } from "../../types";
 import { TaskForm } from "../Common/TaskForm";
 
@@ -141,21 +144,29 @@ export const Calendar: React.FC<CalendarProps> = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>
+            {t("screens.calendar.createTaskModalTitle")}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <TaskForm onSubmit={onCreateTask} />
+            <TaskForm
+              onSubmit={(values) => {
+                onCreateTask(values);
+                setIsCreateTaskOpen(false);
+              }}
+              startDate={getFirstAndLastDate(selectedCalendarDays)?.startDate}
+              endDate={getFirstAndLastDate(selectedCalendarDays)?.endDate}
+            />
           </ModalBody>
 
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              colorScheme={"blue"}
               mr={3}
               onClick={() => setIsCreateTaskOpen(false)}
             >
-              Close
+              {t("common.close")}
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

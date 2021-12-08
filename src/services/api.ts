@@ -1,5 +1,5 @@
 import { toUser } from "./utils";
-import { CalendarType, Task, User } from "./../types";
+import { CalendarType, Task, TaskType, User } from "./../types";
 
 let sessionToken: string | undefined;
 
@@ -244,7 +244,7 @@ const getCalendar = async (
         tasks: [
           {
             id: 1,
-            type: "free",
+            type: "free" as TaskType,
             startDate: new Date(),
             endDate: new Date(),
             user: {
@@ -260,7 +260,7 @@ const getCalendar = async (
           },
           {
             id: 2,
-            type: "busy",
+            type: "busy" as TaskType,
             startDate: new Date(),
             endDate: new Date(),
             user: {

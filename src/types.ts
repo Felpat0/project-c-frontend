@@ -26,9 +26,19 @@ export type CalendarDayState = {
   freeUsers: User[];
 };
 
+export type Period = {
+  startDate: Date;
+  endDate: Date;
+};
+
+export enum TaskType {
+  "free" = "free",
+  "busy" = "busy",
+}
+
 export type Task = {
   id: number;
-  type: "free" | "busy";
+  type: TaskType;
   startDate: Date;
   endDate: Date;
   user: User;
