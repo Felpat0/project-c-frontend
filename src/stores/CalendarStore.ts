@@ -42,11 +42,14 @@ export class CalendarStore {
     this.isFetching = true;
     let toReturn: CalendarType | undefined;
     try {
-      if (this.stores.session.user)
+      if (this.stores.session.user) {
         toReturn = await api.getCalendar(
           this.stores.session.user.id,
           calendarId
         );
+        toReturn.tasks = await api.getCalendarTasks(toReturn.id);
+        toReturn.users = [this.stores.session.user];
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -91,9 +94,9 @@ export class CalendarStore {
     this.isFetching = true;
     task.user = this.stores.session.user;
     task.calendarId = calendarId;
-    let toReturn: Task = task;
+    let toReturn: Task | undefined;
     try {
-      toReturn = await api.createTask(this.stores.session.user.id, task);
+      toReturn = await api.createTask(task);
     } catch (e) {
       console.log(e);
     } finally {

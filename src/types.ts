@@ -42,12 +42,33 @@ export type Task = {
   startDate: Date;
   endDate: Date;
   user: User;
+  description?: string;
   calendarId?: number;
   isGlobal?: boolean;
 };
 
+export type APITask = {
+  id: number;
+  type: TaskType;
+  startDate: Date;
+  endDate: Date;
+  description?: string;
+  createdById?: number;
+  ofCalendarId?: number;
+  isGlobal?: boolean;
+  user?: User;
+  createdBy?: User;
+};
+
 export type CalendarType = {
   id: number;
+  name: string;
   users: User[];
   tasks: Task[];
+  description?: string;
+};
+export type APICalendarType = {
+  id: number;
+  name: string;
+  description?: string;
 };

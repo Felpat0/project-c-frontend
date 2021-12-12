@@ -1,5 +1,10 @@
-import { toUser } from "./utils";
-import { CalendarType, Task, TaskType, User } from "./../types";
+import {
+  APICalendarToCalendar,
+  APITasksToTasks,
+  APITaskToTask,
+  toUser,
+} from "./utils";
+import { APITask, CalendarType, Task, User } from "./../types";
 
 let sessionToken: string | undefined;
 
@@ -237,7 +242,12 @@ const getCalendar = async (
   userId: string,
   calendarId: number
 ): Promise<CalendarType> => {
-  return new Promise(function (resolve) {
+  const response = await makeApiRequest("GET", "calendar/" + calendarId);
+
+  const calendarTasks = await getCalendarTasks(calendarId);
+
+  return APICalendarToCalendar(response, calendarTasks);
+  /* return new Promise(function (resolve) {
     setTimeout(function () {
       resolve({
         id: 1,
@@ -287,10 +297,16 @@ const getCalendar = async (
         ],
       });
     }, 1000);
-  });
+  }); */
 };
 
 //------------------------------------------------------------ TASK ------------------------------------------------------------
+const getTaskCreator = async (taskId: number): Promise<User> => {
+  let response = await makeApiRequest("GET", "users/task/" + taskId);
+
+  return toUser(response);
+};
+
 const getGlobalTasks = async (userId: string): Promise<Task[]> => {
   //return
   return new Promise(function (resolve) {
@@ -300,20 +316,36 @@ const getGlobalTasks = async (userId: string): Promise<Task[]> => {
   });
 };
 
-const getCalendarTasks = async (userId: string): Promise<Task[]> => {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      resolve([]);
-    }, 1000);
-  });
+const getTask = async (taskId: number): Promise<Task> => {
+  const response = await makeApiRequest("GET", "task/" + taskId);
+
+  const user = toUser(await getTaskCreator(response.id));
+
+  return APITaskToTask(response, user);
 };
 
-const createTask = async (userId: string, task: Task): Promise<Task> => {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      resolve(task);
-    }, 1000);
-  });
+const getCalendarTasks = async (calendarId: number): Promise<Task[]> => {
+  const response: APITask[] = await makeApiRequest(
+    "GET",
+    "task/calendar/" + calendarId
+  );
+
+  return APITasksToTasks(response);
+};
+
+const createTask = async (task: Task): Promise<Task> => {
+  const payload = {
+    calendarId: task.calendarId,
+    startDate: task.startDate,
+    endDate: task.endDate,
+    type: task.type,
+    isGlobal: task.isGlobal,
+  };
+  const response = await makeApiRequest("POST", "task", payload);
+
+  const user = toUser(await getTaskCreator(response.id));
+
+  return APITaskToTask(response, user);
 };
 
 const api = {
@@ -333,6 +365,7 @@ const api = {
   getCalendar,
   getCalendarUsers,
   getGlobalTasks,
+  getTask,
   getCalendarTasks,
   createTask,
 };

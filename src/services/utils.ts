@@ -1,8 +1,11 @@
 import {
+  APICalendarType,
+  APITask,
   CalendarDayState,
   CalendarType,
   Period,
   Provider,
+  Task,
   User,
 } from "../types";
 
@@ -16,6 +19,46 @@ export const toUser = (data: any): User => {
     facebookId: data.facebookId,
     googleId: data.googleId,
     twitterId: data.twitterId,
+  };
+};
+
+export const APITaskToTask = (apiTask: APITask, user: User): Task => {
+  return {
+    id: apiTask.id,
+    startDate: new Date(apiTask.startDate),
+    endDate: new Date(apiTask.endDate),
+    type: apiTask.type,
+    user: user,
+    calendarId: apiTask.ofCalendarId,
+    description: apiTask.description,
+    isGlobal: apiTask.isGlobal,
+  };
+};
+
+export const APITasksToTasks = (apiTasks: APITask[]): Task[] => {
+  let toReturn: Task[] = [];
+
+  apiTasks.map((task) => {
+    if (task.user) {
+      toReturn.push(APITaskToTask(task, task.user));
+    } else if (task.createdBy) {
+      toReturn.push(APITaskToTask(task, task.createdBy));
+    }
+    return task;
+  });
+  return toReturn;
+};
+
+export const APICalendarToCalendar = (
+  apiCalendar: APICalendarType,
+  apiTasks: APITask[]
+): CalendarType => {
+  return {
+    id: apiCalendar.id,
+    name: apiCalendar.name,
+    description: apiCalendar.description,
+    tasks: APITasksToTasks(apiTasks),
+    users: [],
   };
 };
 
