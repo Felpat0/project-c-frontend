@@ -157,6 +157,8 @@ export const dateToDatePickerFormat = (date: Date): string => {
   );
 };
 
+export const formatDate = (date: Date): string => date.toLocaleDateString();
+
 export const isDateBetweenTwoDates = (
   from: Date,
   to: Date,

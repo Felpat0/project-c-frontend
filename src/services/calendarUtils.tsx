@@ -1,6 +1,11 @@
 import { CalendarDay } from "../components/Calendar/CalendarDay";
-import { CalendarType } from "../types";
-import { getDaysInMonth, getCalendarDayState, areDatesEqual } from "./utils";
+import { CalendarType, Task } from "../types";
+import {
+  getDaysInMonth,
+  getCalendarDayState,
+  areDatesEqual,
+  isDateBetweenTwoDates,
+} from "./utils";
 
 export const getCalendarDays = (
   calendar: CalendarType,
@@ -65,4 +70,17 @@ export const getCalendarDays = (
   }
 
   return calendarDays;
+};
+
+export const getDaysTasks = (date: Date, calendar: CalendarType): Task[] => {
+  if (calendar.tasks.length === 0) return [];
+
+  let toReturn: Task[] = [];
+  calendar.tasks.map((task) => {
+    if (isDateBetweenTwoDates(task.startDate, task.endDate, date)) {
+      toReturn.push(task);
+    }
+    return task;
+  });
+  return toReturn;
 };

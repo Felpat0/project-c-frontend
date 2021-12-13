@@ -1,8 +1,9 @@
-import { Stack } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import { observer } from "mobx-react";
 import { useCallback, useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { Calendar } from "../components/Calendar/Calendar";
+import { CalendarTaskElement } from "../components/Calendar/CalendarTaskElement";
 import { useStores } from "../hooks/useStores";
 import { Task } from "../types";
 
@@ -39,7 +40,7 @@ export const CalendarScreen: React.FC = observer(() => {
   );
 
   return (
-    <Stack>
+    <Flex>
       {currentCalendar && (
         <Calendar
           month={new Date().getMonth()}
@@ -48,6 +49,12 @@ export const CalendarScreen: React.FC = observer(() => {
           onCreateTask={onCreateTask}
         />
       )}
-    </Stack>
+      {currentCalendar && currentCalendar.tasks.length > 0 && (
+        <Stack>
+          <CalendarTaskElement task={currentCalendar?.tasks[0]} />
+          <CalendarTaskElement task={currentCalendar?.tasks[0]} />
+        </Stack>
+      )}
+    </Flex>
   );
 });
