@@ -1,8 +1,16 @@
-import { Avatar, AvatarGroup, Flex, Spacer, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  AvatarGroup,
+  Flex,
+  Spacer,
+  Text,
+  theme,
+} from "@chakra-ui/react";
 import { dateToString } from "../../services/utils";
 import { transparentize } from "polished";
 import { User } from "../../types";
 import { MouseEventHandler } from "react";
+import { themeColors } from "../../assets/colors";
 
 export type CalendarDayProps = {
   date: Date;
@@ -29,11 +37,15 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
   let size = "10vw";
   let minSize = "5rem";
   let maxSize = "8rem";
-  let borderColor = isSelected ? "#007bff" : "#dfe3e6";
+  let borderColor = isSelected ? "#007bff" : themeColors.calendarBorders;
   let textColor = "#3f4f75";
   let backgroundColor = transparentize(
     isOfAnotherMonth ? 0.2 : 0.8,
-    state === "available" ? "#51C47B" : state === "busy" ? "#C45151" : "#dfe3e6"
+    state === "available"
+      ? themeColors.freeTask
+      : state === "busy"
+      ? themeColors.busyTask
+      : "#dfe3e6"
   );
 
   return (

@@ -1,18 +1,17 @@
 import {
   Avatar,
-  Flex,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Spacer,
+  Stack,
 } from "@chakra-ui/react";
 import { observer } from "mobx-react";
 import { useTranslation } from "react-i18next";
 import { Redirect, useHistory } from "react-router";
 import { useStores } from "../hooks/useStores";
 
-export const TopBar: React.FC = observer(() => {
+export const Sidebar: React.FC = observer(() => {
   const { session } = useStores();
   const { t } = useTranslation();
   const history = useHistory();
@@ -22,10 +21,9 @@ export const TopBar: React.FC = observer(() => {
   }
 
   return (
-    <Flex zIndex={2}>
-      <Spacer />
+    <Stack zIndex={2} bg={"slateblue"} padding={"0.5rem"} h={"100vh"}>
       <Menu>
-        <MenuButton>
+        <MenuButton marginLeft={"auto"}>
           <Avatar
             src={session.user?.profilePhoto}
             name={session.user?.nominative}
@@ -51,6 +49,6 @@ export const TopBar: React.FC = observer(() => {
           </MenuItem>
         </MenuList>
       </Menu>
-    </Flex>
+    </Stack>
   );
 });

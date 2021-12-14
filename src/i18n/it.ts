@@ -8,6 +8,7 @@ const it = {
     save: "Salva",
     close: "Chiudi",
     cancel: "Cancella",
+    user: "Utente",
   },
   errors: {
     missingName: "Inserire il nome utente",
@@ -80,6 +81,7 @@ const it = {
       isGlobal: "Questa attività vale per tutti i miei calendari",
       free: "Liberi",
       busy: "Occupati",
+      dayTasks: "Lista delle attività nei giorni selezionati",
     },
   },
 };

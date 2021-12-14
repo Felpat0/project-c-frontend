@@ -72,7 +72,7 @@ export const getCalendarDays = (
   return calendarDays;
 };
 
-export const getDaysTasks = (date: Date, calendar: CalendarType): Task[] => {
+export const getDayTasks = (date: Date, calendar: CalendarType): Task[] => {
   if (calendar.tasks.length === 0) return [];
 
   let toReturn: Task[] = [];
@@ -81,6 +81,16 @@ export const getDaysTasks = (date: Date, calendar: CalendarType): Task[] => {
       toReturn.push(task);
     }
     return task;
+  });
+  return toReturn;
+};
+
+export const getDaysTasks = (dates: Date[], calendar: CalendarType): Task[] => {
+  if (calendar.tasks.length === 0 || dates.length === 0) return [];
+
+  let toReturn: Task[] = [];
+  dates.map((date) => {
+    return (toReturn = [...toReturn, ...getDayTasks(date, calendar)]);
   });
   return toReturn;
 };

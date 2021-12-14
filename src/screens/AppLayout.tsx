@@ -1,8 +1,8 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { useStores } from "../hooks/useStores";
-import { Stack } from "@chakra-ui/react";
-import { TopBar } from "./TopBar";
+import { Flex } from "@chakra-ui/react";
+import { Sidebar } from "./Sidebar";
 import { PrivateRoute } from "../components/PrivateRoute";
 import { EditUserProfile } from "./EditUserProfile";
 import { Route } from "react-router-dom";
@@ -11,8 +11,8 @@ import { CalendarScreen } from "./CalendarScreen";
 export const AppLayout: React.FC = observer(() => {
   const { session } = useStores();
   return (
-    <Stack>
-      <TopBar />
+    <Flex maxH={"100vh"}>
+      <Sidebar />
       <PrivateRoute
         isAuthenticated={session.isLogged}
         path={"/user/:uid/editProfile"}
@@ -23,6 +23,6 @@ export const AppLayout: React.FC = observer(() => {
         path={"/app/calendar/:calendarId"}
         component={CalendarScreen}
       />
-    </Stack>
+    </Flex>
   );
 });

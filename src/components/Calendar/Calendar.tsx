@@ -30,6 +30,8 @@ export type CalendarProps = {
   year: number;
   calendar: CalendarType;
   onCreateTask: (task: Task) => void;
+  selectedCalendarDays: Date[];
+  setSelectedCalendarDays: (dates: Date[]) => void;
 };
 
 export const Calendar: React.FC<CalendarProps> = ({
@@ -37,11 +39,12 @@ export const Calendar: React.FC<CalendarProps> = ({
   year,
   calendar,
   onCreateTask,
+  selectedCalendarDays,
+  setSelectedCalendarDays,
 }: CalendarProps) => {
   const { t } = useTranslation();
 
   const [calendarDays, setCalendarDays] = useState<any[]>([]);
-  const [selectedCalendarDays, setSelectedCalendarDays] = useState<Date[]>([]);
   const [isSelecting, setIsSelecting] = useState(false);
   const [contextMenuOrigin, setContextMenuOrigin] = useState<number[]>([0, 0]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -78,6 +81,7 @@ export const Calendar: React.FC<CalendarProps> = ({
 
   return (
     <Stack
+      maxH={"100vh"}
       spacing={"0.7rem"}
       onMouseUp={() => setIsSelecting(false)}
       onDragStart={(e) => {
@@ -90,6 +94,22 @@ export const Calendar: React.FC<CalendarProps> = ({
         }
       }}
     >
+      {/* This flex is used for resetting the selection, it is positioned between the CalendarDays and their container */}
+      {isMenuOpen && (
+        <Flex
+          position={"absolute"}
+          top={0}
+          left={0}
+          w={"100%"}
+          h={"100%"}
+          zIndex={0}
+          onClick={() => {
+            setSelectedCalendarDays([]);
+            setIsMenuOpen(false);
+          }}
+        />
+      )}
+
       <Menu isOpen={isMenuOpen}>
         <MenuList
           position={"absolute"}
@@ -125,19 +145,7 @@ export const Calendar: React.FC<CalendarProps> = ({
           {week}
         </HStack>
       ))}
-      {/* This flex is used for resetting the selection, it is positioned between the CalendarDays and their container */}
-      <Flex
-        position={"absolute"}
-        top={0}
-        left={0}
-        w={"100%"}
-        h={"100%"}
-        zIndex={0}
-        onClick={() => {
-          setSelectedCalendarDays([]);
-          setIsMenuOpen(false);
-        }}
-      />
+
       <Modal
         isOpen={isCreateTaskOpen}
         onClose={() => setIsCreateTaskOpen(false)}
